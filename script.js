@@ -1,172 +1,95 @@
-// ========== PASSWORD HASH ========== //
-async function hashPassword(password) {
-  const msgUint8 = new TextEncoder().encode(password);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8);
-  return Array.from(new Uint8Array(hashBuffer))
-              .map(b => b.toString(16).padStart(2, "0"))
-              .join("");
+body {
+    font-family: Poppins, Arial;
+    margin: 0;
+    background: #f4f7ff;
 }
 
-// ========== ACCOUNT CREATION ========== //
-async function createAcc() {
-  let u = document.getElementById("newuser").value;
-  let p = document.getElementById("newpass").value;
-
-  if (!u || !p) return alert("Enter all details!");
-
-  if (localStorage.getItem("acc_" + u)) {
-    alert("Username already taken");
-    return;
-  }
-
-  let hash = await hashPassword(p);
-  localStorage.setItem("acc_" + u, hash);
-  alert("Account created!");
+/* Header */
+.header {
+    background: #3547e6;
+    padding: 15px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-// ========== LOGIN ========== //
-async function login() {
-  let u = document.getElementById("user").value;
-  let p = document.getElementById("pass").value;
-  let msg = document.getElementById("msg");
-
-  if (!u || !p) {
-    msg.innerText = "Enter login details!";
-    return;
-  }
-
-  let stored = localStorage.getItem("acc_" + u);
-  if (!stored) {
-    msg.innerText = "Account not found!";
-    return;
-  }
-
-  let hash = await hashPassword(p);
-
-  if (hash === stored) {
-    sessionStorage.setItem("user", u);
-    window.location.href = "progress.html";
-  } else {
-    msg.innerText = "Wrong password!";
-  }
+.logo {
+    margin: 0;
 }
 
-// ========== LOGOUT ========== //
-function logout() {
-  sessionStorage.removeItem("user");
-  window.location.href = "login.html";
+.nav a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
 }
 
-// ========== PROGRESS PAGE FUNCTIONS ========== //
-function generateSuggestion() {
-  let mist = document.getElementById("mist").value;
-  let remarkBox = document.getElementById("remark");
-
-  if (!mist.trim()) {
-    remarkBox.value = "Great work today! Keep reviewing your concepts for steady improvement.";
-    return;
-  }
-
-  // simple offline AI logic
-  let suggestion = "";
-
-  if (mist.includes("confuse") || mist.includes("difficult"))
-    suggestion = "Try breaking the concept into smaller steps and revise slowly.";
-  else if (mist.includes("slow") || mist.includes("time"))
-    suggestion = "Practice timed exercises to improve speed.";
-  else if (mist.includes("forget"))
-    suggestion = "Use flashcards or short notes to improve memory.";
-  else
-    suggestion = "Keep practicing regularly and focus on mistakes for improvement.";
-
-  remarkBox.value = suggestion;
+.nav a.active {
+    background: white;
+    color: #3547e6;
 }
 
-function saveEntry() {
-  let user = sessionStorage.getItem("user");
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
-
-  let sub = document.getElementById("sub").value;
-  let time = document.getElementById("time").value;
-  let mist = document.getElementById("mist").value;
-  let remark = document.getElementById("remark").value;
-
-  if (!sub || !time) {
-    alert("Enter subject and time!");
-    return;
-  }
-
-  let entry = {
-    date: new Date().toLocaleDateString(),
-    sub, time, mist, remark
-  };
-
-  let data = JSON.parse(localStorage.getItem("data_" + user) || "[]");
-  data.push(entry);
-
-  localStorage.setItem("data_" + user, JSON.stringify(data));
-
-  alert("Entry Saved!");
-  loadTable();
-  drawGraph();
+/* Hero */
+.hero {
+    text-align: center;
+    padding: 60px 20px;
 }
 
-function loadTable() {
-  let user = sessionStorage.getItem("user");
-  let table = document.getElementById("table");
-  let data = JSON.parse(localStorage.getItem("data_" + user) || "[]");
-
-  table.innerHTML = `
-    <tr>
-      <th>Date</th>
-      <th>Subject</th>
-      <th>Minutes</th>
-      <th>Mistakes</th>
-      <th>Remark</th>
-    </tr>
-  `;
-
-  data.forEach(d => {
-    table.innerHTML += `
-      <tr>
-        <td>${d.date}</td>
-        <td>${d.sub}</td>
-        <td>${d.time}</td>
-        <td>${d.mist}</td>
-        <td>${d.remark}</td>
-      </tr>
-    `;
-  });
+.hero span {
+    color: #3547e6;
 }
 
-function drawGraph() {
-  let user = sessionStorage.getItem("user");
-  let data = JSON.parse(localStorage.getItem("data_" + user) || "[]");
-
-  let labels = data.map(d => d.date);
-  let values = data.map(d => Number(d.time));
-
-  new Chart(document.getElementById("chart"), {
-    type: "line",
-    data: {
-      labels: labels,
-      datasets: [{
-        label: "Minutes Studied",
-        data: values,
-        borderColor: "#4a63e7",
-        backgroundColor: "rgba(74,99,231,0.3)",
-        fill: true
-      }]
-    }
-  });
+.btn {
+    background: #3547e6;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 8px;
 }
 
-window.onload = function () {
-  if (document.getElementById("table")) {
-    loadTable();
-    drawGraph();
-  }
-};
+/* Login */
+.login-container {
+    width: 300px;
+    margin: 70px auto;
+    padding: 25px;
+    background: white;
+    border-radius: 10px;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: #3547e6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+/* Progress */
+.progress-container {
+    width: 90%;
+    max-width: 600px;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+}
+
+table {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}

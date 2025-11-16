@@ -1,41 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>FocusMate Progress</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusMate – Progress</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body onload="loadProgress()">
+    <header class="header">
+        <h1 class="logo">FocusMate</h1>
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="progress.html" class="active">Progress</a>
+            <a href="login.html">Login</a>
+        </nav>
+    </header>
 
-<div class="container">
-  <h1>Your Study Progress</h1>
-  <button onclick="logout()" style="background:#e74c3c;">Logout</button>
+    <div class="progress-container">
+        <h2>Daily Progress</h2>
 
-  <div class="card">
-    <h2>Add Daily Entry</h2>
+        <input type="text" id="subject" placeholder="Subject studied">
 
-    <input id="sub" placeholder="Subject">
+        <input type="number" id="hours" placeholder="Hours studied">
 
-    <input id="time" type="number" placeholder="Time (minutes)">
+        <button onclick="addRecord()">Add Record</button>
 
-    <textarea id="mist" placeholder="Mistakes faced"></textarea>
+        <h3>Your Records</h3>
+        <table id="recordTable">
+            <tr>
+                <th>Date</th>
+                <th>Subject</th>
+                <th>Hours</th>
+                <th>AI Remark</th>
+            </tr>
+        </table>
 
-    <textarea id="remark" placeholder="Remark (auto-generated below)"></textarea>
+        <h3>Progress Graph</h3>
+        <canvas id="chart"></canvas>
+    </div>
 
-    <button onclick="generateSuggestion()">Generate Suggestion</button>
-    <button onclick="saveEntry()">Save Entry</button>
-  </div>
-
-  <h2>Progress Graph</h2>
-  <canvas id="chart" width="400" height="200"></canvas>
-
-  <h2>All Entries</h2>
-  <table id="table"></table>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="script.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
